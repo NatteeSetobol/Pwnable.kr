@@ -1,1 +1,13 @@
 Asm
+I'm not quite experience in creating shellcode. I did to some assembly when I was into reverse engineering games so I do know a
+bit of Assembly in x86 Intel but, it was a long time and now we have x64 bit machines.
+So I didn't know what to do and I promised myself not to look at Adam's solution, so I started googling for way to do all this 
+by mostly hand because I wanted it to be a learning experiment. I knew there's an easier way to generate shell code with tools,
+but I didn't want to take that route.
+I found an Article with a simple hello world example of how to create shellcode by using syscall and NASM. I copied and compiled 
+it and did an object dump on the execute file, but the problem is, the offset of the string would not be the same when I put
+the shell code into the program. The string offset would actually be the length of the shellcode because it would be at the end
+of shellcode. I also found a bash/perl script that would print my assemble code in a nice hex code. I can now use that script 
+and it will produce something like \x90\x30 ..etc and I could type printf then copy that hex out into that file.
+
+<to be cont...>
