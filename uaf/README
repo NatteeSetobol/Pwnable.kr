@@ -1,0 +1,35 @@
+Use After free expliot POC:
+When I first started this, I didn't know exactly what do, so I tried a bunch of stuff like just buffer-over-flowing program 
+in a debugger to see what it does. I made a folder and I typed python -c "print 'a'*50" > /tmp/temp/whatever.txt. I loaded
+up GDB with the executable and ran it with the file. The program stopped and so I checked the registered and found nothing
+was overflown. I exited GDB and tried again with a*100, but again it didn't work. I then tried something lower a*20 and
+it seems to work! Registers was overflown with As. I then tried to find the position so I can put the address that points to the 
+function that execute shell. I tried A*8 + B*8 and found out the A was in the position I wanted!
+
+
+Now, all I need to do was get the address of function GetShell() and put it in, right? So, I enter the address of the Give_Shell() thanks to Hopper and I put in (little Endian)
+7a1140001a11400 (16) (address * 2) and so the register in the dubugger pointed to 7a1140001a11400...uh oops I forgot it was 64 bits...so,
+I tried again 7a11400000000000 but no, the debugger stopped....hmm...that didn't work. I took a look at the assemble code:
+
+mov    rax,QWORD PTR [rbp-0x38]
+
+mov    rax,QWORD PTR [rax]
+
+add    rax,0x8
+
+
+So what this basically does is, it takes whatever is in the current stack address - 0x38 (rbp - 0x38) and puts it into rax which then 
+takes whatever is in the address of rax and puts it into itself (rax). Then it adds 8 to RAX, mov rax to rdx and calls rdx.
+So in the Debugger, I check rax before mov  rax,QWORD PTR [rax] (where it crashed) and got 40117a, and inside of the address 40117a was the actually assembly code
+of Give_Shell(), so it made sense that it crashed... and here's where I admit I took a peek of Adam Doupe video's tutorial, mostly because
+I'm a beginner and I had no clue where to start. I remember in that video, I need put the address of the vitual table that has the address 40117a
+inside the address of the vitual table, so did that and snap snap clap (?) (or was it clap, snap snap) (I forget what Adam does
+whenever he figures out the solution) it works!
+
+
+I could had just did what Adam did in the video, but I really wanted to get more deep into it and find out how it all works, because
+I curious and I don't think I couldn't had learn if I just did that.
+
+
+Special Thanks to Adam Doupe. Adam's tutorials and lectures are very good (although,the sound is very low and so it's hard to hear him).
+I suggest you check it out at website is https://adamdoupe.com.
