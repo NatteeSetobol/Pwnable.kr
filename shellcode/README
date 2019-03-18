@@ -7,7 +7,11 @@ but I didn't want to take that route.
 I found an Article with a simple hello world example of how to create shellcode by using syscall and NASM. I copied and compiled 
 it and did an object dump on the execute file, but the problem is, the offset of the string would not be the same when I put
 the shell code into the program. The string offset would actually be the length of the shellcode because it would be at the end
-of shellcode. I also found a bash/perl script that would print my assemble code in a nice hex code. I can now use that script 
-and it will produce something like \x90\x30 ..etc and I could type printf then copy that hex out into that file.
-
-<to be cont...>
+of shellcode. So I calculated the offset, compiled it, and ran the script to convert to hex and did a printf + hex result into a file
+. I then did another printf "hello" and append it to the file. I think ran asm execute with the file that has my shellcode and it 
+worked. Now, all I had to do now is open the file, read the file and then print out the content of the file which is the flag.
+This was a bit hard but not really because I had to first leave some space at the end of my shellcode for the long filename and 
+also leave some space for the content that will be read into a file. I manage to do this but on my machine. Now, all I have to
+do is write a program that will ssh into server, send a packet that will call nc and another packet with my shellcode and it 
+should print out the flag. At first, I thought I need to leave space for both the filename and the read buffer but I could 
+actually use the name space for the read buffer since, it wouldn't be need it anymore after I opened the file.
